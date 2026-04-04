@@ -1,0 +1,4 @@
+flask
+mlxtend
+pandas
+redis

@@ -1,0 +1,41 @@
+name: Run Tests
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest
+          pip install -r receipt_service/requirements.txt
+          pip install -r rules_service/requirements.txt
+
+      - name: Run Receipt Service Tests
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        run: |
+          cd receipt_service
+          python -m pytest test_receipt_service.py -v
+
+      - name: Run Rules Service Tests
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        run: |
+          cd rules_service
+          python -m pytest test_rules_service.py -v
