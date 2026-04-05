@@ -81,3 +81,16 @@ def test_rules_no_receipts(client):
         assert response.status_code == 200
         data = response.get_json()
         assert data == []
+
+
+# Test that the service handles a Redis error gracefully
+# When hvals raises an exception, the service should return HTTP 500
+def test_rules_redis_error(client):
+    from rules_service import create_redis_client
+    r = create_redis_client()
+
+    # Simulate a Redis connection failure
+    r.hvals.side_effect = Exception("Redis connection refused")
+
+    with pytest.raises(Exception, match="Redis connection refused"):
+        client.get("/api/rules")

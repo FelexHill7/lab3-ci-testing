@@ -37,3 +37,11 @@ def test_receipt_success(client):
 def test_receipt_missing_fields(client):
     response = client.post("/api/receipt", json={"receipt_id": "2"})
     assert response.status_code == 500
+
+
+# Test sending a completely empty JSON body.
+# The service should return error 500 since both receipt_id and products are missing.
+def test_receipt_empty_body(client):
+    response = client.post("/api/receipt", json={})
+    assert response.status_code == 500
+    assert response.get_json()["status"] == "error"
