@@ -81,6 +81,14 @@ def test_receipt_success(client):
 def test_receipt_missing_fields(client):
     response = client.post("/api/receipt", json={"receipt_id": "2"})
     assert response.status_code == 500
+
+
+# Test sending a completely empty JSON body.
+# The service should return error 500 since both receipt_id and products are missing.
+def test_receipt_empty_body(client):
+    response = client.post("/api/receipt", json={})
+    assert response.status_code == 500
+    assert response.get_json()["status"] == "error"
 ```
 
 **Test descriptions:**
@@ -91,6 +99,8 @@ def test_receipt_missing_fields(client):
   - The mock Redis `hset` was called exactly once with the correct key (`receipt:1`) and the JSON-serialized products list.
 
 - **`test_receipt_missing_fields`**: Sends a POST request with only `receipt_id` but no `products` field. The service attempts to access `data["products"]`, which raises a `KeyError`, caught by the `except` block, returning a 500 error. Asserts that the response status code is 500.
+
+- **`test_receipt_empty_body`**: Sends a POST request with a completely empty JSON body `{}`. Both `receipt_id` and `products` are missing, so the service raises a `KeyError` on the first field access, caught by the `except` block. Asserts that the response status code is 500 and the response body contains `{"status": "error"}`.
 
 ### Rules Service Tests (`rules_service/test_rules_service.py`)
 
@@ -174,6 +184,19 @@ def test_rules_no_receipts(client):
         assert response.status_code == 200
         data = response.get_json()
         assert data == []
+
+
+# Test that the service handles a Redis error gracefully
+# When hvals raises an exception, the service should return HTTP 500
+def test_rules_redis_error(client):
+    from rules_service import create_redis_client
+    r = create_redis_client()
+
+    # Simulate a Redis connection failure
+    r.hvals.side_effect = Exception("Redis connection refused")
+
+    with pytest.raises(Exception, match="Redis connection refused"):
+        client.get("/api/rules")
 ```
 
 **Test descriptions:**
@@ -184,6 +207,8 @@ def test_rules_no_receipts(client):
   - The rule's antecedents and consequents are correct.
 
 - **`test_rules_no_receipts`**: Sets `hvals` to return an empty list (no receipts). Mocks the algorithm functions to return empty DataFrames. Asserts that the service returns HTTP 200 with an empty JSON list `[]`.
+
+- **`test_rules_redis_error`**: Configures the mock Redis `hvals` to raise an `Exception` simulating a Redis connection failure. Asserts that the exception propagates through the service, confirming the error is not silently swallowed. The rules service does not have explicit error handling, so the exception bubbles up as expected.
 
 **Note:** The `sys.modules.pop("rules_service", None)` in the fixture ensures the rules service module is re-imported cleanly with the mock applied, avoiding stale cached imports.
 
@@ -257,34 +282,36 @@ No deployment steps are included as per the instructions.
 ### Receipt Service Tests
 
 ```
-========================================================== test session starts ===========================================================
+============================= test session starts =============================
 platform win32 -- Python 3.11.9, pytest-9.0.2, pluggy-1.6.0 -- C:\Users\Charm\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\python.exe
 cachedir: .pytest_cache
-rootdir: C:\Users\Charm\Downloads\LabTest3-Code\LabTest3-Code\receipt_service
-collected 2 items
+rootdir: C:\Users\Charm\Downloads\LabTest3-Code\LabTest3-Code
+collected 3 items
 
-test_receipt_service.py::test_receipt_success PASSED                                                                                [ 50%]
-test_receipt_service.py::test_receipt_missing_fields PASSED                                                                         [100%]
+receipt_service/test_receipt_service.py::test_receipt_success PASSED     [ 33%]
+receipt_service/test_receipt_service.py::test_receipt_missing_fields PASSED [ 66%]
+receipt_service/test_receipt_service.py::test_receipt_empty_body PASSED  [100%]
 
-=========================================================== 2 passed in 1.98s ============================================================
+============================== 3 passed in 2.23s ==============================
 ```
 
 ### Rules Service Tests
 
 ```
-========================================================== test session starts ===========================================================
+============================= test session starts =============================
 platform win32 -- Python 3.11.9, pytest-9.0.2, pluggy-1.6.0 -- C:\Users\Charm\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\python.exe
 cachedir: .pytest_cache
-rootdir: C:\Users\Charm\Downloads\LabTest3-Code\LabTest3-Code\rules_service
-collected 2 items
+rootdir: C:\Users\Charm\Downloads\LabTest3-Code\LabTest3-Code
+collected 3 items
 
-test_rules_service.py::test_rules_success PASSED                                                                                    [ 50%]
-test_rules_service.py::test_rules_no_receipts PASSED                                                                                [100%]
+rules_service/test_rules_service.py::test_rules_success PASSED           [ 33%]
+rules_service/test_rules_service.py::test_rules_no_receipts PASSED       [ 66%]
+rules_service/test_rules_service.py::test_rules_redis_error PASSED       [100%]
 
-=========================================================== 2 passed in 24.10s ===========================================================
+============================== 3 passed in 1.59s ==============================
 ```
 
-**All 4 tests passed locally.**
+**All 6 tests passed locally.**
 
 ---
 
