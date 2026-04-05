@@ -1,0 +1,118 @@
+[
+  {
+    "receipt_id": "1",
+    "products": ["milk", "bread", "butter"]
+  },
+  {
+    "receipt_id": "2",
+    "products": ["bread", "butter", "diapers"]
+  },
+  {
+    "receipt_id": "3",
+    "products": ["milk", "beer"]
+  },
+  {
+    "receipt_id": "4",
+    "products": ["bread", "butter", "jam", "diapers", "beer"]
+  },
+  {
+    "receipt_id": "5",
+    "products": ["bread", "jam", "eggs"]
+  },
+  {
+    "receipt_id": "6",
+    "products": ["milk", "eggs", "beer"]
+  },
+  {
+      "receipt_id": "7",
+      "products": ["jam", "eggs", "bread"]
+  },
+  {
+      "receipt_id": "8",
+      "products": ["milk", "diapers", "beer"]
+  },
+  {
+      "receipt_id": "9",
+      "products": ["milk", "bread", "jam"]
+  },
+  {
+    "receipt_id": "10",
+    "products": ["milk", "bread", "eggs"]
+  },
+  {
+    "receipt_id": "11",
+    "products": ["bread", "butter", "diapers", "jam", "eggs"]
+  },
+  {
+    "receipt_id": "12",
+    "products": ["bread", "beer"]
+  },
+  {
+    "receipt_id": "13",
+    "products": ["milk", "jam", "diapers"]
+  },
+  {
+    "receipt_id": "14",
+    "products": ["eggs", "bread", "butter"]
+  },
+  {
+    "receipt_id": "15",
+    "products": ["milk", "bread", "beer"]
+  },
+  {
+      "receipt_id": "16",
+      "products": ["eggs", "beer", "butter", "diapers"]
+  },
+  {
+      "receipt_id": "17",
+      "products": ["eggs", "bread", "butter", "beer"]
+  },
+  {
+      "receipt_id": "18",
+      "products": ["milk", "jam", "butter", "eggs"]
+  },
+  {
+    "receipt_id": "19",
+    "products": ["milk", "bread", "butter", "eggs", "jam"]
+  },
+  {
+    "receipt_id": "20",
+    "products": ["bread", "butter", "diapers", "jam", "eggs"]
+  },
+  {
+    "receipt_id": "21",
+    "products": ["milk", "butter"]
+  },
+  {
+    "receipt_id": "22",
+    "products": ["jam", "bread", "butter"]
+  },
+  {
+    "receipt_id": "23",
+    "products": ["milk", "eggs", "diapers"]
+  },
+  {
+    "receipt_id": "24",
+    "products": ["milk", "bread", "butter", "diapers"]
+  },
+  {
+      "receipt_id": "25",
+      "products": ["milk", "eggs", "beer"]
+  },
+  {
+      "receipt_id": "26",
+      "products": ["eggs", "bread", "jam"]
+  },
+  {
+      "receipt_id": "27",
+      "products": ["eggs", "diapers", "beer"]
+  },
+  {
+      "receipt_id": "28",
+      "products": ["milk", "eggs", "jam"]
+  },
+  {
+      "receipt_id": "29",
+      "products": ["milk", "bread", "butter", "beer"]
+  }
+]
